@@ -1,0 +1,13 @@
+name = "ImageChipper"
+uuid = "7f671e5d-0047-4e0c-be3f-48e444156e7b"
+authors = ["Casey Kneale"]
+version = "0.1.0"
+
+[compat]
+julia = "1.3.1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

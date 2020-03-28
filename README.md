@@ -19,7 +19,7 @@ chipped = chip( faux_image, ( 64, 64 ), ( 0.0, 0.0 ) )
 where the returned array is a 3-tensor of size `( Chip width, Chip height, Chip # )`
 
 ### Image chipping with labels
-images with associated bounding boxes may also be chipped with known ObjectDetectionStats.jl bounding boxes.
+images with associated bounding boxes may also be chipped with known [ObjectDetectionStats.jl](https://github.com/caseykneale/ObjectDetectionStats.jl) bounding boxes.
 
 ```Julia
 faux_image = rand( 256, 256 )

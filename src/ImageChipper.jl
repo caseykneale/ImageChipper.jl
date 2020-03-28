@@ -5,7 +5,7 @@ module ImageChipper
                     chip_size::Tuple{Int, Int}      = ( 128, 128 ),
                     overlap::Tuple{Float64,Float64} = ( 0.0, 0.0 ) )
         width, height   = size( img )
-        chips           = Int.( ceil.( [ width, height ] ./ chip_size ) ) .+ 1
+        chips           = Int.( ceil.( [ width, height ] ./ chip_size ) ) #.+ 1
         overlap_factor  = chip_size
         if overlap != ( 0.0, 0.0 )
             chips = Int.( ceil.( ( chips .- 1.0 ) .* ( 1.0 ./ overlap ) ) )  #.+ 1

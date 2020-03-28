@@ -4,10 +4,6 @@ authors = ["Casey Kneale"]
 version = "0.1.0"
 
 [deps]
-FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-ImageMagick = "6218d12a-5da1-5696-b52f-db25d2ecc6d1"
-ImageView = "86fae568-95e7-573e-a6b2-d8a6b900c9ef"
-Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 ObjectDetectionStats = "06718956-e3b8-45c5-a167-688b8218b63e"
 
 [compat]

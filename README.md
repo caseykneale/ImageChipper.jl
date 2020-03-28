@@ -10,7 +10,6 @@
 ## Overview
 
 ### Image chipping
-two main functions
 ```Julia
 faux_image = rand( 256, 256 )
 # chip( image/Matrix, ( Chip width, Chip height ), ( Overlap X, Overlap Y ) )

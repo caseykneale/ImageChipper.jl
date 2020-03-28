@@ -22,7 +22,7 @@ end
 @testset "Image Chipping with Boxes" begin
     using ObjectDetectionStats
     faux_image = rand( 256, 256 )
-    chip_dims = ( 64, 64 )
+    chip_dims = ( 128, 128 )
 
     boxes = [   Box(   1,   1,  22,  22 ),
                 Box(  55,  55, 222, 222 ),

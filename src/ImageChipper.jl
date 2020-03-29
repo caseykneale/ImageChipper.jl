@@ -52,7 +52,7 @@ module ImageChipper
                                 IoU_threshold::Float64          = 0.0,
                                 clamp_to_chip::Bool             = false )
         width, height   = size( img )
-        clamp_box       = ObjectDetectionScore.box( 1, 1, width, height )
+        clamp_box       = ObjectDetectionStats.Box( 1, 1, width, height )
         chips           = Int.( ceil.( [ width, height ] ./ chip_size ) ) #.+ 1
         overlap_factor  = chip_size
         if overlap != ( 0.0, 0.0 )
@@ -77,12 +77,10 @@ module ImageChipper
             chip_box = ObjectDetectionStats.Box( first(X), first(Y), last(X), last(Y) )
 
             if clamp_to_chip
-                postprocess(x) = translate(x, -first(X), -first(Y) )
                 boxes_in_chip[ chip_count ] = [ ( i, translate(box, -first(X), -first(Y) ) ) for (i, box) in enumerate( boxes )
                                                 if intersection_over_union(chip_box, box) > IoU_threshold ]
             else
-                postprocess(x) = clamp( translate(box, -first(X), -first(Y) ), clamp_box )
-                boxes_in_chip[ chip_count ] = [ ( i, postprocess( box ) ) for (i, box) in enumerate( boxes )
+                boxes_in_chip[ chip_count ] = [ ( i, ObjectDetectionStats.clamp( translate(box, -first(X), -first(Y) ), clamp_box ) ) for (i, box) in enumerate( boxes )
                                                 if intersection_over_union(chip_box, box) > IoU_threshold ]
             end
 

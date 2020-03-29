@@ -1,6 +1,12 @@
 module ImageChipper
     using ObjectDetectionStats#, Images, FileIO, ImageMagick
+    """
+        chip(   img::Matrix,
+                chip_size::Tuple{Int, Int}      = ( 128, 128 ),
+                overlap::Tuple{Float64,Float64} = ( 0.0, 0.0 ) )
 
+    Chips an image into the specified `chip_size` with a given amount of overlap(0 .<= `overlap` .< 1) in either the x or y axis.
+    """
     function chip(  img::Matrix,
                     chip_size::Tuple{Int, Int}      = ( 128, 128 ),
                     overlap::Tuple{Float64,Float64} = ( 0.0, 0.0 ) )
@@ -30,12 +36,23 @@ module ImageChipper
     end
     export chip
 
-    function chip_with_boxes(   img::Matrix,
+    """
+        chip_with_boxes(   img::Matrix,
                                 boxes::Vector{ObjectDetectionStats.Box},
                                 chip_size::Tuple{Int, Int}      = ( 128, 128 ),
                                 overlap::Tuple{Float64,Float64} = ( 0.0, 0.0 ),
                                 IoU_threshold::Float64          = 0.0 )
+
+    Chips an image and updates bounding box locations.
+    """
+    function chip_with_boxes(   img::Matrix,
+                                boxes::Vector{ObjectDetectionStats.Box},
+                                chip_size::Tuple{Int, Int}      = ( 128, 128 ),
+                                overlap::Tuple{Float64,Float64} = ( 0.0, 0.0 ),
+                                IoU_threshold::Float64          = 0.0,
+                                clamp_to_chip::Bool             = false )
         width, height   = size( img )
+        clamp_box       = ObjectDetectionScore.box( 1, 1, width, height )
         chips           = Int.( ceil.( [ width, height ] ./ chip_size ) ) #.+ 1
         overlap_factor  = chip_size
         if overlap != ( 0.0, 0.0 )
@@ -58,8 +75,16 @@ module ImageChipper
             X = (row == chips[2]) ? ( (  width - chip_size[ 1 ] + 1 ) : width  ) : X
             chip_view[:,:,chip_count] = view( img, X, Y )
             chip_box = ObjectDetectionStats.Box( first(X), first(Y), last(X), last(Y) )
-            boxes_in_chip[ chip_count ] = [ i for (i, box) in enumerate( boxes )
-                                            if intersection_over_union(chip_box, box) > IoU_threshold ]
+
+            if clamp_to_chip
+                postprocess(x) = translate(x, -first(X), -first(Y) )
+                boxes_in_chip[ chip_count ] = [ ( i, translate(box, -first(X), -first(Y) ) ) for (i, box) in enumerate( boxes )
+                                                if intersection_over_union(chip_box, box) > IoU_threshold ]
+            else
+                postprocess(x) = clamp( translate(box, -first(X), -first(Y) ), clamp_box )
+                boxes_in_chip[ chip_count ] = [ ( i, postprocess( box ) ) for (i, box) in enumerate( boxes )
+                                                if intersection_over_union(chip_box, box) > IoU_threshold ]
+            end
 
             chip_count += 1
         end
@@ -67,5 +92,4 @@ module ImageChipper
     end
 
     export chip, chip_with_boxes
-
 end # module

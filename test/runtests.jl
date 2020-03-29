@@ -24,9 +24,9 @@ end
     faux_image = rand( 256, 256 )
     chip_dims = ( 128, 128 )
 
-    boxes = [   Box(   1,   1,  22,  22 ),
-                Box(  55,  55, 222, 222 ),
-                Box( 222, 222, 264, 264 )   ]
+    boxes = [   ObjectDetectionStats.Box(   1,   1,  22,  22 ),
+                ObjectDetectionStats.Box(  55,  55, 222, 222 ),
+                ObjectDetectionStats.Box( 222, 222, 264, 264 )   ]
 
     chips, boxassignments = chip_with_boxes( faux_image, boxes, chip_dims, ( 0.0, 0.0 ), 0.0 )
 
